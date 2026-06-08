@@ -5,14 +5,14 @@ import java.awt.Graphics;
 
 public class Bola extends ObjetosJogo {
     
-    private int velocidadeX, velocidadeY;
+    private int velocidadeX, velocidadeY, velocidadeBola = 5;
     private static final int TAMANHO = 10;
 
     //construtor 
     public Bola(int x, int y) {
         super(x, y, TAMANHO, TAMANHO);
-        setVelocidadeX(5);
-        setVelocidadeY(5);
+        setVelocidadeX(velocidadeBola);
+        setVelocidadeY(velocidadeBola);
     }
 
     // getter e setters
@@ -57,8 +57,11 @@ public class Bola extends ObjetosJogo {
         g.fillOval(x, y, width, height);
     }
     
-    
-    
-    
+    public void reset(int x, int y){
+        this.x = x;
+        this.y = y;
+        setVelocidadeX(velocidadeBola);
+        setVelocidadeY(velocidadeBola);
+    }
     
 }

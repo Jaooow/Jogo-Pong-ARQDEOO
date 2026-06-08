@@ -5,12 +5,14 @@ import java.awt.Graphics;
 
 public class Raquete extends ObjetosJogo {
     
-    private static final int W = 12, H= 80;
+    private static final int W = 12, H= 80, altura_tela = 600;
     private int velocidade = 6;
     private boolean cima, baixo;
 
     public Raquete(int x, int y) {
         super(x, y, W, H);
+        setBaixo(false);
+        setCima(false);
     }
     
     
@@ -34,7 +36,7 @@ public class Raquete extends ObjetosJogo {
     public void update() {
         if( cima && y > 0 ) {
             y -= velocidade;
-        } else if( baixo && y < 600 - H) {
+        } else if( baixo && y < altura_tela  - H) {
             y += velocidade;
         }
     }
