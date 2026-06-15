@@ -32,8 +32,8 @@ public class EstadoDeJogo {
     // Iniciar objetos que serão utilizados no jogo
     private void iniciarObjetos(){
         bola = new Bola(widht / 2 - 7, height / 2 - 7);
-         raquete1 = new Raquete(10, 300);
-         raquete2 = new Raquete(790, 300);
+        raquete1 = new Raquete(10, 300);
+        raquete2 = new Raquete(790, 300);
     }
     
     // Resetar o jogo
@@ -48,7 +48,7 @@ public class EstadoDeJogo {
     
     // Método para reposicionar a bola no centro
     public void resetarBola(){
-        // Continuar quando Objeto Bola estiver finalizada
+        bola.reset(widht / 2 - 7, height / 2 - 7);
     }
     
     // Atualiza o estado do jogo 
@@ -63,7 +63,41 @@ public class EstadoDeJogo {
     
     // Método para Verificar colisoes com as raquetes/paredes + pontuacao
     private void verificarColisoes(){
-       // Terminar Lógica de Colisões
+        
+        // Paredes superior e inferior
+        if(bola.getY() <= 0){
+            bola.setY(0);
+            bola.rebaterY();
+        }else if(bola.getY() + bola.getHeight() >= height){
+            bola.setY(height - bola.getHeight());
+            bola.rebaterY();
+        }
+        
+        // Colisao com a Raquete 1 
+        if(bola.getArea().intersects(raquete1.getArea()) && bola.getVelocidadeX() < 0 ){
+            bola.setX(raquete1.getX() + Raquete.getW());
+            bola.rebaterX();
+        }
+        
+        // Colisao com a Raquete 2 
+        if(bola.getArea().intersects(raquete2.getArea()) && bola.getVelocidadeX() > 0 ){
+            bola.setX(raquete2.getX() - bola.getWidth());
+            bola.rebaterX();
+        }
+        
+        // Ponto para o jogador 1
+        if(bola.getX() > widht ){
+            score1++;
+            verificarGanhador();
+            resetarBola();
+        }
+        
+        // Ponto para o jogador 2
+        if(bola.getX() + bola.getWidth() < 0 ){
+            score1++;
+            verificarGanhador();
+            resetarBola();
+        }
     }
     
     // Verificar se alguem ganhou a partida

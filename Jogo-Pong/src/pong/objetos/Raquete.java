@@ -30,7 +30,16 @@ public class Raquete extends ObjetosJogo {
     public void setBaixo(boolean baixo) {
         this.baixo = baixo;
     }
+    
+    // Getters
+    public static int getW() {
+        return W;
+    }
 
+    public static int getH() {
+        return H;
+    }
+        
     // logica para verificar se a raquete sobe ou desce e quanto de pixels é alterado
     @Override
     public void update() {
