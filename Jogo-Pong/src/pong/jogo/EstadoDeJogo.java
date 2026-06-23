@@ -31,9 +31,9 @@ public class EstadoDeJogo {
     
     // Iniciar objetos que serão utilizados no jogo
     private void iniciarObjetos(){
-        bola = new Bola(widht / 2 - 7, height / 2 - 7);
-        raquete1 = new Raquete(10, 300);
-        raquete2 = new Raquete(790, 300);
+        bola = new Bola(widht / 2 - 5, height / 2 - 5);
+        raquete1 = new Raquete(30, height / 2 - 40);
+        raquete2 = new Raquete(widht - 30 - Raquete.getW(), height / 2 - 40);
     }
     
     // Resetar o jogo

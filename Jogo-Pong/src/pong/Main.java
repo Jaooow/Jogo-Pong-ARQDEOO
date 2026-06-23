@@ -1,10 +1,8 @@
 package pong;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import pong.jogo.EstadoDeJogo;
+import pong.visual.PainelDoJogo;
 
 public class Main {
 
@@ -77,22 +75,15 @@ public class Main {
         // teste do visual
         JFrame janela = new JFrame("Teste do Pong - Visual");
         
-        JPanel telaTeste = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                // desenhar os objetos do jogo
-                estado.getBola().draw(g);
-                estado.getRaquete1().draw(g);
-                estado.getRaquete2().draw(g);
-            }
-                        
-        };
-        // resolver tela de fundo branco, nao ta indo o fundo preto e uma raquete nao ta aparecendo na tela pequena  
-        telaTeste.setBackground(Color.black);
+        estado.setEm_andamento(false);
+        PainelDoJogo painel  = new PainelDoJogo(estado);
         
-        janela.add(telaTeste);
-        janela.setSize(EstadoDeJogo.widht, EstadoDeJogo.height);
+        janela.add(painel);
+//        janela.setSize(EstadoDeJogo.widht, EstadoDeJogo.height);
+        janela.pack();
         janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        janela.setResizable(false);
+        janela.setLocationRelativeTo(null);
         
         janela.setVisible(true);
     }
