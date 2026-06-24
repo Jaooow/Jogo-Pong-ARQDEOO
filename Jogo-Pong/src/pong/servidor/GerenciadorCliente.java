@@ -3,6 +3,7 @@ package pong.servidor;
 import java.io.*;
 import java.net.Socket;
 
+// Classe para tratar o Jogador
 public class GerenciadorCliente implements Runnable{
     
     private final Socket socket;
@@ -39,4 +40,7 @@ public class GerenciadorCliente implements Runnable{
 
     // Getter
     public String getLastInput() { return lastInput; }
+    
+    // Enviar o estado de jogo para o Jogador
+    public void enviarEstado(String estado){ if(out != null) out.println(estado); }
 }
