@@ -1,9 +1,8 @@
 package pong;
 
-import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import pong.jogo.EstadoDeJogo;
-import pong.visual.PainelDoJogo;
-import pong.visual.PainelMenu;
+import pong.visual.PainelPrincipal;
 
 public class Main {
 
@@ -74,20 +73,22 @@ public class Main {
         
         
         // teste do visual
-        JFrame janela = new JFrame("Teste do Pong - Visual");
+        // JFrame janela = new JFrame("Teste do Pong - Visual");
         
-        estado.setEm_andamento(false);
+        // estado.setEm_andamento(false);
 //        PainelDoJogo painel  = new PainelDoJogo(estado);
         // arrumar centralizacao dos botoes do menu
-        PainelMenu painel  = new PainelMenu();
+        // PainelMenu painel  = new PainelMenu();
         
-        janela.add(painel);
+        // janela.add(painel);
 //        janela.setSize(EstadoDeJogo.widht, EstadoDeJogo.height);
-        janela.pack();
-        janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        janela.setResizable(false);
-        janela.setLocationRelativeTo(null);
+        // janela.pack();
+        // janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //janela.setResizable(false);
+        // janela.setLocationRelativeTo(null);
         
-        janela.setVisible(true);
+        // janela.setVisible(true);
+        
+        SwingUtilities.invokeLater(PainelPrincipal::new);
     }
 }

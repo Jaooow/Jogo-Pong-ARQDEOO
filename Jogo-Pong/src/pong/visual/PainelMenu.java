@@ -17,7 +17,7 @@ import pong.jogo.EstadoDeJogo;
  */
 public class PainelMenu extends JPanel{
 
-    public PainelMenu() {
+    public PainelMenu(PainelPrincipal painel) {
         // Setando a tela 
         setPreferredSize(new Dimension(EstadoDeJogo.widht, EstadoDeJogo.height));
         setBackground(Color.black);

@@ -11,7 +11,6 @@ import pong.jogo.EstadoDeJogo;
 
 public class PainelDoJogo extends JPanel {
     
-    
     private final EstadoDeJogo estado;
     private int numeroJogador;
 
