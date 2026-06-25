@@ -3,6 +3,7 @@ package pong;
 import javax.swing.JFrame;
 import pong.jogo.EstadoDeJogo;
 import pong.visual.PainelDoJogo;
+import pong.visual.PainelMenu;
 
 public class Main {
 
@@ -76,7 +77,9 @@ public class Main {
         JFrame janela = new JFrame("Teste do Pong - Visual");
         
         estado.setEm_andamento(false);
-        PainelDoJogo painel  = new PainelDoJogo(estado);
+//        PainelDoJogo painel  = new PainelDoJogo(estado);
+        // arrumar centralizacao dos botoes do menu
+        PainelMenu painel  = new PainelMenu();
         
         janela.add(painel);
 //        janela.setSize(EstadoDeJogo.widht, EstadoDeJogo.height);
