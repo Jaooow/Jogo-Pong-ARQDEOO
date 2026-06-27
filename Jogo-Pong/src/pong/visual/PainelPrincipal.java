@@ -48,7 +48,7 @@ public class PainelPrincipal extends JFrame {
         setContentPane(painelDoJogo);
         pack();
         revalidate();
-        painelDoJogo.requestFocusInWindow(); // puxa o foco do teclado para o jogo
+        SwingUtilities.invokeLater(() -> painelDoJogo.requestFocusInWindow()); // puxa o foco do teclado para o jogo
     }
     
     // Modo local
@@ -57,6 +57,7 @@ public class PainelPrincipal extends JFrame {
         painelDoJogo = new PainelDoJogo(estado);
         estado.resetar();
         
+        // Ação de clicar na tecla
         painelDoJogo.addKeyListener(new KeyAdapter(){
         @Override
         public void keyPressed(KeyEvent e){
@@ -72,6 +73,7 @@ public class PainelPrincipal extends JFrame {
             }
         }
         
+        // Ação de soltar a tecla
         @Override
         public void keyReleased(KeyEvent e){
             switch(e.getKeyCode()){

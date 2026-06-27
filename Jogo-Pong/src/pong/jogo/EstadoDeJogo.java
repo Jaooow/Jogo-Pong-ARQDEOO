@@ -113,6 +113,7 @@ public class EstadoDeJogo {
         }
     }
     
+    // Getters
     public Bola getBola() { return bola; }
     public Raquete getRaquete1() { return raquete1; }
     public Raquete getRaquete2() { return raquete2; }
@@ -121,7 +122,11 @@ public class EstadoDeJogo {
     public boolean isEm_andamento() { return em_andamento; }
     public boolean isGameOver() { return gameOver; }
     public int getVencedor() {return vencedor; }
-
-    public void setEm_andamento(boolean r){ this.em_andamento = r; }
     
+    // Setters
+    public void setEm_andamento(boolean r){ this.em_andamento = r; }
+    public void setScore1(int score1){ this.score1 = score1; }
+    public void setScore2(int score2){ this.score2 = score2; }
+    public void setGameOver(boolean v){ this.gameOver = v; }
+    public void setVencedor(int vencedor){ this.vencedor = vencedor; }
 }

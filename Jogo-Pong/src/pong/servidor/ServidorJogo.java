@@ -6,6 +6,7 @@ import java.net.Socket;
 
 import pong.jogo.EstadoDeJogo;
 import pong.objetos.Raquete;
+import pong.pontuacao.GerenciadorDePontuacao;
 
 // Servidor do Jogo - Adaptar parte de pontuações
 public class ServidorJogo {
@@ -14,10 +15,12 @@ public class ServidorJogo {
     private GerenciadorCliente gerenciador1;
     private GerenciadorCliente gerenciador2;
     private EstadoDeJogo estado;
+    private GerenciadorDePontuacao gerenciadorPontuacao;
     
     // Construtor para inicializar atributos
     public ServidorJogo() {
         this.estado = new EstadoDeJogo();
+        this.gerenciadorPontuacao = new GerenciadorDePontuacao();
     }
     
     // Método para iniciar o Servidor
@@ -57,6 +60,8 @@ public class ServidorJogo {
                 }
             }
             
+            gerenciadorPontuacao.salvarPontuacao("Jogador1", estado.getScore1(),"Jogador2", estado.getScore2());
+            
             serverSocket.close();
     }
     
@@ -64,15 +69,15 @@ public class ServidorJogo {
     private void receberComando(String input, Raquete raquete){
         raquete.setBaixo(false);
         raquete.setCima(false);
-        if("UP".equals(input)) raquete.setCima(true);
-        if("DOWN".equals(input)) raquete.setBaixo(true);
+        if("CIMA".equals(input)) raquete.setCima(true);
+        if("BAIXO".equals(input)) raquete.setBaixo(true);
     }
     
     // Método que monta o estado do jogo em Texto (utilizado para enviar para o jogador, já que não utilizamos serializable)
     private String montarEstado(){
         return estado.getBola().getX() + "," + estado.getBola().getY() + "," + estado.getRaquete1().getY() 
                 + "," + estado.getRaquete2().getY() + "," + estado.getScore1() + "," 
-                + estado.getScore2() + "," + estado.isGameOver() + "," + estado.getVencedor();
+                + estado.getScore2() + "," + estado.isGameOver() + "," + estado.getVencedor() + "," + estado.isEm_andamento();
     }
     
     public static void main(String[] args) {

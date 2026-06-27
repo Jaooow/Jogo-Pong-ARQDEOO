@@ -74,6 +74,11 @@ public class ClienteJogo {
             estadoLocal.getBola().setY(Integer.parseInt(p[1])); // Atualiza y da bola
             estadoLocal.getRaquete1().setY(Integer.parseInt(p[2])); // Atualiza y da raquete 1
             estadoLocal.getRaquete2().setY(Integer.parseInt(p[3])); // Atualiza y da raquete 2
+            estadoLocal.setScore1(Integer.parseInt(p[4])); // Atualiza pontuacao
+            estadoLocal.setScore2(Integer.parseInt(p[5])); // Atualiza pontuacao
+            estadoLocal.setGameOver(Boolean.parseBoolean(p[6])); // Atualiza se acabou ou nao
+            estadoLocal.setVencedor(Integer.parseInt(p[7])); // Atualiza vencedor
+            estadoLocal.setEm_andamento(Boolean.parseBoolean(p[8])); // Atualiza se o jogo esta em andamento ou nao
         } catch (Exception e) {
             System.out.println("Erro ao aplicar estado: " + e.getMessage());
         }
