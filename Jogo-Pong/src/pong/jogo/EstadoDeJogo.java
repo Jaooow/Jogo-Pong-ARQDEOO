@@ -2,6 +2,7 @@ package pong.jogo;
 
 import pong.objetos.Bola;
 import pong.objetos.Raquete;
+import pong.sons.GerenciadorDeSom;
 
 /* Classe para atualizar o estado do Jogo */
 public class EstadoDeJogo {
@@ -77,12 +78,14 @@ public class EstadoDeJogo {
         if(bola.getArea().intersects(raquete1.getArea()) && bola.getVelocidadeX() < 0 ){
             bola.setX(raquete1.getX() + Raquete.getW());
             bola.rebaterX();
+            GerenciadorDeSom.tocar("ball.wav");
         }
         
         // Colisao com a Raquete 2 
         if(bola.getArea().intersects(raquete2.getArea()) && bola.getVelocidadeX() > 0 ){
             bola.setX(raquete2.getX() - bola.getWidth());
             bola.rebaterX();
+            GerenciadorDeSom.tocar("ball.wav");
         }
         
         // Ponto para o jogador 1
@@ -106,10 +109,12 @@ public class EstadoDeJogo {
             vencedor = 1;
             gameOver = true;
             em_andamento = false;
+            GerenciadorDeSom.tocar("winner.wav");
         }else if(score2 >= pontuacao_vencedora){
             vencedor = 2;
             gameOver = true;
             em_andamento = false;
+            GerenciadorDeSom.tocar("winner.wav");
         }
     }
     

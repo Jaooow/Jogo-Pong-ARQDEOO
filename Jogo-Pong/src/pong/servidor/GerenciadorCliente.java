@@ -12,6 +12,7 @@ public class GerenciadorCliente implements Runnable{
     private PrintWriter out;
     private BufferedReader in;
     private volatile String lastInput;
+    private Runnable aoDesconectar;
 
     // Construtor 
     public GerenciadorCliente(Socket socket, int jogadorNumero) {
@@ -35,6 +36,8 @@ public class GerenciadorCliente implements Runnable{
             }
         } catch (IOException e) {
             System.out.println("Jogador " + jogadorNumero + "desconectou-se.");
+        } finally {
+           if (aoDesconectar != null) aoDesconectar.run(); // Callback para o servidor saber que a thread encerrou
         }
     }
 
@@ -43,4 +46,5 @@ public class GerenciadorCliente implements Runnable{
     
     // Enviar o estado de jogo para o Jogador
     public void enviarEstado(String estado){ if(out != null) out.println(estado); }
+    public void setAoDesconectar(Runnable aoDesconectar) { this.aoDesconectar = aoDesconectar; }
 }

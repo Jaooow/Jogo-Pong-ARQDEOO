@@ -32,6 +32,12 @@ public class PainelDoJogo extends JPanel {
         
         super.paintComponent(g);
         
+        // Linha central
+        g.setColor(new Color(255, 255, 255, 80));
+        for (int i = 0; i < EstadoDeJogo.height; i += 24) {
+            g.fillRect(EstadoDeJogo.widht / 2 - 1, i, 2, 12);
+        }
+        
         // Desenhando objetos do jogo
         if( estado.getBola() != null){
             estado.getBola().draw(g);
@@ -92,14 +98,9 @@ public class PainelDoJogo extends JPanel {
             g.setFont(new Font("Arial", Font.PLAIN, 12));
             g.setColor(new Color(255,255,255,120));
             
-            String comandos;
-            if(numeroJogador == 1){
-                comandos = "( W / S )";
-            }else{
-                comandos = "( Setas indicadoras )";
-            }
-            
-            g.drawString("Voce e o jogador " + numeroJogador + " " + comandos, 15, EstadoDeJogo.height - 15);
+            String comandos = "( W / S  ou  Setas )";
+    
+            g.drawString("Voce e o Jogador " + numeroJogador + "  " + comandos, 15, EstadoDeJogo.height - 15);
         }
     }
     

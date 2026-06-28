@@ -16,18 +16,18 @@ public class ClienteJogo {
     private boolean conectado;
     private EstadoDeJogo estadoLocal;
     private Runnable estadoUpdate;
-
+    private Runnable aoOutroDesconectar;
+    
     // Construtor que recebe o estado local do jogo
     public ClienteJogo(EstadoDeJogo estadoLocal) {
         this.estadoLocal = estadoLocal;
         this.numeroJogador = 0;
         this.conectado = false;
+        this.aoOutroDesconectar = null;
     }
     
     // Callback  de atualização do jogo
-    public void setEstadoUpdate(Runnable r){
-        this.estadoUpdate = r;
-    }
+    public void setEstadoUpdate(Runnable r){ this.estadoUpdate = r; }
     
     // Método para conectar no servidor
     public boolean conectado(String host){
@@ -36,6 +36,7 @@ public class ClienteJogo {
             // cria socket e tempo de espera de 3 segundos
             socket = new Socket();
             socket.connect(new java.net.InetSocketAddress(host, ServidorJogo.PORTA), 3000);
+            socket.setTcpNoDelay(true);
             
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -63,6 +64,10 @@ public class ClienteJogo {
             String linha; 
             
             while(conectado && (linha = in.readLine()) != null){                
+                if (linha.startsWith("DESCONECTADO:")) {
+                    if (aoOutroDesconectar != null) aoOutroDesconectar.run();
+                    break;
+                }
                 aplicarEstado(linha);
                 if(estadoUpdate != null) estadoUpdate.run(); // Callback para redesenhar a tela
             }
@@ -106,5 +111,7 @@ public class ClienteJogo {
     // Getters
     public int getNumeroJogador(){ return numeroJogador; } 
     public boolean isConectado() { return conectado; }
+    
+    public void setAoOutroDesconectar(Runnable r) { this.aoOutroDesconectar = r; }
     
 }

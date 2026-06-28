@@ -48,12 +48,21 @@ public class PainelMenu extends JPanel{
         
         add(Box.createVerticalStrut(40));
         
-        JLabel controles = new JLabel(" Jogador 1: W / S  |  Jogador 2: Setas ");
-        controles.setFont(new Font("Arial", Font.BOLD, 14));
-        controles.setForeground(Color.gray);
-        
-        controles.setAlignmentX(CENTER_ALIGNMENT);
-        add(controles);
+        // Controles modo local
+        JLabel controlesLocal = new JLabel("Modo Local:  Jogador 1 → W / S   |   Jogador 2 → Setas");
+        controlesLocal.setFont(new Font("Arial", Font.PLAIN, 13));
+        controlesLocal.setForeground(Color.gray);
+        controlesLocal.setAlignmentX(CENTER_ALIGNMENT);
+        add(controlesLocal);
+
+        add(Box.createVerticalStrut(6));
+
+        // Controles modo rede
+        JLabel controlesRede = new JLabel("Modo Rede:  Ambas as teclas funcionam");
+        controlesRede.setFont(new Font("Arial", Font.PLAIN, 13));
+        controlesRede.setForeground(Color.gray);
+        controlesRede.setAlignmentX(CENTER_ALIGNMENT);
+        add(controlesRede);
     }
     
     // Metodo para criar botao padrozinado do menu

@@ -10,6 +10,7 @@ import javax.swing.SwingUtilities;
 import pong.jogo.EstadoDeJogo;
 import pong.servidor.ClienteJogo;
 import pong.servidor.ServidorJogo;
+import pong.sons.GerenciadorDeSom;
 
 // Classe responsavel atuar como controlador da interface
 public class PainelPrincipal extends JFrame {
@@ -17,6 +18,9 @@ public class PainelPrincipal extends JFrame {
     private EstadoDeJogo estado;
     private ClienteJogo cliente;
     
+    private Thread loopLocal;
+    private volatile boolean rodarLoop;
+
     // Cria a janela principal
     public PainelPrincipal() {
         setTitle("Pong Multiplayer");
@@ -60,9 +64,20 @@ public class PainelPrincipal extends JFrame {
     
     // Modo local
     public void iniciarJogoLocal(){
+        rodarLoop = false;
+        
+        if (loopLocal != null && loopLocal.isAlive()) {
+            try {
+                loopLocal.join(200); // aguarda até 200ms
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+        
         estado = new EstadoDeJogo();
         painelDoJogo = new PainelDoJogo(estado);
         estado.resetar();
+        GerenciadorDeSom.tocar("iniciar.wav");
         
         // Ação de clicar na tecla
         painelDoJogo.addKeyListener(new KeyAdapter(){
@@ -75,8 +90,10 @@ public class PainelPrincipal extends JFrame {
                 case KeyEvent.VK_UP: estado.getRaquete2().setCima(true); break;
                 case KeyEvent.VK_DOWN: estado.getRaquete2().setBaixo(true); break;
                 
-                case KeyEvent.VK_R: iniciarJogoLocal(); break;
-                case KeyEvent.VK_ESCAPE: mostrarMenu(); break;
+                case KeyEvent.VK_R:
+                    if (estado.isGameOver()) iniciarJogoLocal();
+                    break;
+                case KeyEvent.VK_ESCAPE: rodarLoop = false; mostrarMenu(); break;
             }
         }
         
@@ -94,10 +111,11 @@ public class PainelPrincipal extends JFrame {
         });
         
         mostrarJogo();
+        rodarLoop = true;
         
         // Thread para rodar o jogo de forma separada
-        Thread loopLocal = new Thread(() -> {
-            while(!estado.isGameOver()){
+        loopLocal = new Thread(() -> {
+            while(rodarLoop && !estado.isGameOver()){
                 estado.update();
                 SwingUtilities.invokeLater(painelDoJogo::repaint); // Redesenhar a tela
                 try {
@@ -106,6 +124,9 @@ public class PainelPrincipal extends JFrame {
                     break;
                 }
             }
+            
+            if (!rodarLoop) return;
+            
             SwingUtilities.invokeLater(painelDoJogo::repaint); // Já fora do loop, faz com que apareça a tela de vencedor
             
             pong.pontuacao.GerenciadorDePontuacao salvador = new pong.pontuacao.GerenciadorDePontuacao();
@@ -160,7 +181,19 @@ public class PainelPrincipal extends JFrame {
                 
                 this.painelDoJogo.setNumeroJogador(cliente.getNumeroJogador());
                 this.cliente.setEstadoUpdate(() -> SwingUtilities.invokeLater(painelDoJogo::repaint)); // callback para o cliente receber atualizações do estado
-           
+                
+                this.cliente.setAoOutroDesconectar(() -> {
+                    SwingUtilities.invokeLater(() -> {
+                        JOptionPane.showMessageDialog(
+                            this,
+                            "O outro jogador saiu da partida.",
+                            "Partida encerrada",
+                            JOptionPane.INFORMATION_MESSAGE
+                        );
+                        mostrarMenu();
+                    });
+                });
+                
                 // Teclado envia comandos para o servidor
                 painelDoJogo.addKeyListener(new KeyAdapter(){
                     @Override
@@ -170,6 +203,11 @@ public class PainelPrincipal extends JFrame {
                             case KeyEvent.VK_UP: cliente.enviarInput("CIMA"); break;
                             case KeyEvent.VK_S:
                             case KeyEvent.VK_DOWN: cliente.enviarInput("BAIXO"); break;
+                            case KeyEvent.VK_R:
+                                if (estado.isGameOver()) {
+                                    cliente.enviarInput("REINICIAR"); // Só é possivel reiniciar quando o jogo acabar
+                                }
+                                break;
                             case KeyEvent.VK_ESCAPE:
                                 cliente.desconectar();
                                 SwingUtilities.invokeLater(PainelPrincipal.this::mostrarMenu);

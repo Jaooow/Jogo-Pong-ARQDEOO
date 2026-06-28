@@ -5,8 +5,8 @@ import java.awt.Graphics;
 
 public class Bola extends ObjetosJogo {
     
-    private int velocidadeX, velocidadeY, velocidadeBola = 5;
-    private static final int TAMANHO = 10;
+    private int velocidadeX, velocidadeY;
+    private static final int TAMANHO = 10, velocidadeBola = 5;
 
     //construtor 
     public Bola(int x, int y) {
