@@ -25,34 +25,35 @@ public class ServidorJogo {
     
     // Método para iniciar o Servidor
     public void start() throws IOException {
-            ServerSocket serverSocket = new ServerSocket(PORTA);
+        try (ServerSocket serverSocket = new ServerSocket(PORTA)){
+            
             System.out.println("Servidor Iniciado.");
             System.out.println("Aguardando Jogadores... ");
-            
+
+            // conecta o jogador 1 e inicia a comunicação
             Socket socket1 = serverSocket.accept();
             System.out.println("Jogador 1 Conectado.");
+            gerenciador1 = new GerenciadorCliente(socket1, 1);
+            new Thread(gerenciador1).start();
             
+            // o servidor fica na espera do jogador 2
             Socket socket2 = serverSocket.accept();
             System.out.println("Jogador 2 Conectado.");
-            
-            gerenciador1 = new GerenciadorCliente(socket1, 1);
             gerenciador2 = new GerenciadorCliente(socket2, 2);
-            
-            new Thread(gerenciador1).start();
             new Thread(gerenciador2).start();
-            
+
             estado.resetar();
-            
+
             while (!estado.isGameOver()) {            
                 receberComando(gerenciador1.getLastInput(), estado.getRaquete1());
                 receberComando(gerenciador2.getLastInput(), estado.getRaquete2());
-                
+
                 estado.update();
-                
+
                 String estadoAtual = montarEstado();
                 gerenciador1.enviarEstado(estadoAtual);
                 gerenciador2.enviarEstado(estadoAtual);
-                
+
                 try {
                     Thread.sleep(16);
                 } catch (InterruptedException e) {
@@ -60,11 +61,14 @@ public class ServidorJogo {
                 }
             }
             
+            String estadoFinal = montarEstado();
+            gerenciador1.enviarEstado(estadoFinal);
+            gerenciador2.enviarEstado(estadoFinal);
+            
             gerenciadorPontuacao.salvarPontuacao("Jogador1", estado.getScore1(),"Jogador2", estado.getScore2());
             
-            serverSocket.close();
+        }
     }
-    
     // Método para receber e aplicar o comando da raquete UP/DOWN
     private void receberComando(String input, Raquete raquete){
         raquete.setBaixo(false);

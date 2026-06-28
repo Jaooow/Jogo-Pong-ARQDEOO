@@ -94,7 +94,7 @@ public class EstadoDeJogo {
         
         // Ponto para o jogador 2
         if(bola.getX() + bola.getWidth() < 0 ){
-            score1++;
+            score2++;
             verificarGanhador();
             resetarBola();
         }

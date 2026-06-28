@@ -41,14 +41,21 @@ public class PainelPrincipal extends JFrame {
         setContentPane(menu);
         pack();
         revalidate();
+        repaint();
     }
     
     // Troca o conteudo da tela para o jogo + foco das teclas no jogo
     public void mostrarJogo(){
         setContentPane(painelDoJogo);
-        pack();
         revalidate();
         SwingUtilities.invokeLater(() -> painelDoJogo.requestFocusInWindow()); // puxa o foco do teclado para o jogo
+    }
+    
+    public void mostrarPontuacao(){
+        PainelPontuacao pontuacao = new PainelPontuacao(this);
+        setContentPane(pontuacao);
+        revalidate();
+        repaint();
     }
     
     // Modo local
@@ -100,6 +107,10 @@ public class PainelPrincipal extends JFrame {
                 }
             }
             SwingUtilities.invokeLater(painelDoJogo::repaint); // Já fora do loop, faz com que apareça a tela de vencedor
+            
+            pong.pontuacao.GerenciadorDePontuacao salvador = new pong.pontuacao.GerenciadorDePontuacao();
+            salvador.salvarPontuacao("Jogador1", estado.getScore1(), "Jogador2", estado.getScore2());
+            
         });
         
         loopLocal.setDaemon(true);
@@ -131,46 +142,54 @@ public class PainelPrincipal extends JFrame {
     
     // Inicia uma partida conectando no servidor informado
     private void iniciarJogoRede(String ip){
-        estado = new EstadoDeJogo();
-        painelDoJogo = new PainelDoJogo(estado);
-        cliente = new ClienteJogo(estado);
-        
-        cliente.setEstadoUpdate(() -> SwingUtilities.invokeLater(painelDoJogo::repaint)); // callback para o cliente receber atualizações do estado
-        
-        if(!cliente.conectado(ip)){
-            JOptionPane.showMessageDialog(this, "Não foi possivel conectar ao servidor.", "Erro", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-        painelDoJogo.setNumeroJogador(cliente.getNumeroJogador());
-        
-        // Teclado envia comandos para o servidor
-        painelDoJogo.addKeyListener(new KeyAdapter(){
-            @Override
-            public void keyPressed(KeyEvent e){
-                switch(e.getKeyCode()){
-                    case KeyEvent.VK_W:
-                    case KeyEvent.VK_UP: cliente.enviarInput("CIMA"); break;
-                    case KeyEvent.VK_S:
-                    case KeyEvent.VK_DOWN: cliente.enviarInput("BAIXO"); break;
-                    case KeyEvent.VK_ESCAPE:
-                        cliente.desconectar();
-                        SwingUtilities.invokeLater(PainelPrincipal.this::mostrarMenu);
-                        break;
-                }
+        new Thread(() -> {
+            EstadoDeJogo estado = new EstadoDeJogo();
+            ClienteJogo cliente = new ClienteJogo(estado);
+            
+            if(!cliente.conectado(ip)){
+                SwingUtilities.invokeLater(() -> {
+                    JOptionPane.showMessageDialog(this, "Não foi possivel conectar ao servidor.\n Verifique se o IP está correto ou se o Servidor está aberto.", "Erro", JOptionPane.ERROR_MESSAGE);            
+                });
+                return;
             }
             
-            @Override
-            public void keyReleased(KeyEvent e){
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_W:
-                    case KeyEvent.VK_UP:
-                    case KeyEvent.VK_S:
-                    case KeyEvent.VK_DOWN: cliente.enviarInput("PARAR"); break;
-                }
-            }
-        });
-        
-        mostrarJogo();
+            SwingUtilities.invokeLater(() -> {
+                this.estado = estado;
+                this.cliente = cliente;
+                this.painelDoJogo = new PainelDoJogo(estado);
+                
+                this.painelDoJogo.setNumeroJogador(cliente.getNumeroJogador());
+                this.cliente.setEstadoUpdate(() -> SwingUtilities.invokeLater(painelDoJogo::repaint)); // callback para o cliente receber atualizações do estado
+           
+                // Teclado envia comandos para o servidor
+                painelDoJogo.addKeyListener(new KeyAdapter(){
+                    @Override
+                    public void keyPressed(KeyEvent e){
+                        switch(e.getKeyCode()){
+                            case KeyEvent.VK_W:
+                            case KeyEvent.VK_UP: cliente.enviarInput("CIMA"); break;
+                            case KeyEvent.VK_S:
+                            case KeyEvent.VK_DOWN: cliente.enviarInput("BAIXO"); break;
+                            case KeyEvent.VK_ESCAPE:
+                                cliente.desconectar();
+                                SwingUtilities.invokeLater(PainelPrincipal.this::mostrarMenu);
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void keyReleased(KeyEvent e){
+                        switch (e.getKeyCode()) {
+                            case KeyEvent.VK_W:
+                            case KeyEvent.VK_UP:
+                            case KeyEvent.VK_S:
+                            case KeyEvent.VK_DOWN: cliente.enviarInput("PARAR"); break;
+                        }
+                    }
+                });
+                
+                mostrarJogo();
+            });
+        }).start();
     }
 }

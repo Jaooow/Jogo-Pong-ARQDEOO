@@ -9,7 +9,17 @@ public class GerenciadorDePontuacao {
     
     // Método para salvar o resultado de uma partida
     public void salvarPontuacao(String jogador1, int score1, String jogador2, int score2){
-        String vencedor = score1 > score2 ? jogador1 : jogador2;
+        
+        String vencedor;
+        if( score1 > score2){
+            vencedor = jogador1;
+        }else if(score2 > score1){
+            vencedor = jogador2;
+        }else{
+            vencedor = "Empate";
+        }
+        
+        
         String linha = jogador1 + " " + score1 + " x " + score2 + " " + jogador2 + " | Vencedor: " + vencedor;
         
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_PATH, true))) { // Abre o arquivo para editar

@@ -2,10 +2,11 @@ package pong.objetos;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import pong.jogo.EstadoDeJogo;
 
 public class Raquete extends ObjetosJogo {
     
-    private static final int W = 12, H= 80, altura_tela = 600;
+    private static final int W = 12, H= 80, altura_tela = EstadoDeJogo.height;
     private int velocidade = 6;
     private boolean cima, baixo;
 
@@ -15,12 +16,6 @@ public class Raquete extends ObjetosJogo {
         setCima(false);
     }
     
-    
-    //  verificar a necessidade dk set da velocidade, tendo em vista que é pre-setada
-
-//    public void setVelocidade(int velocidade) {
-//        this.velocidade = velocidade;
-//    }
 
     // metodos para mover a raquete para cima e para baixo
     public void setCima(boolean cima) {

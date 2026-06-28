@@ -96,7 +96,7 @@ public class PainelDoJogo extends JPanel {
             if(numeroJogador == 1){
                 comandos = "( W / S )";
             }else{
-                comandos = "( Setar indicadoras )";
+                comandos = "( Setas indicadoras )";
             }
             
             g.drawString("Voce e o jogador " + numeroJogador + " " + comandos, 15, EstadoDeJogo.height - 15);

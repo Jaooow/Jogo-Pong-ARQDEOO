@@ -11,7 +11,7 @@ public class GerenciadorCliente implements Runnable{
     
     private PrintWriter out;
     private BufferedReader in;
-    private String lastInput;
+    private volatile String lastInput;
 
     // Construtor 
     public GerenciadorCliente(Socket socket, int jogadorNumero) {

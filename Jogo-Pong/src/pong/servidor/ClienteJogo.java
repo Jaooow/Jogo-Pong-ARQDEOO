@@ -32,7 +32,11 @@ public class ClienteJogo {
     // Método para conectar no servidor
     public boolean conectado(String host){
         try {
-            socket = new Socket(host, ServidorJogo.PORTA);
+            
+            // cria socket e tempo de espera de 3 segundos
+            socket = new Socket();
+            socket.connect(new java.net.InetSocketAddress(host, ServidorJogo.PORTA), 3000);
+            
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             conectado = true;
@@ -103,18 +107,4 @@ public class ClienteJogo {
     public int getNumeroJogador(){ return numeroJogador; } 
     public boolean isConectado() { return conectado; }
     
-    /* public static void main(String[] args) {
-        EstadoDeJogo estado = new EstadoDeJogo();
-
-        ClienteJogo cliente = new ClienteJogo(estado);
-
-        boolean conectado = cliente.conectado("localhost");
-
-        System.out.println("Conectado? " + conectado);
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-        }
-    } */
 }
